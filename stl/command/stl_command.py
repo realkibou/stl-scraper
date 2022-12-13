@@ -91,7 +91,7 @@ Global Options:
             checkout = self.__args.get('--checkout')
             pricing = Pricing(config['airbnb']['api_key'], currency, self.__logger)
             total = pricing.get_pricing(checkin, checkout, listing_id)
-            print('https://www.airbnb.com/rooms/{} - {} to {}: {}'.format(listing_id, checkin, checkout, total))
+            return total
 
         else:
             raise RuntimeError('ERROR: Unexpected command:\n{}'.format(*self.__args))

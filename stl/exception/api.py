@@ -9,6 +9,10 @@ class ForbiddenException(ApiException):
     """HTTP 403 Forbidden Exception"""
     pass
 
+class NotFoundException(ApiException):
+    """HTTP 404 Resource not found"""
+    pass
+
 
 class ServerException(ApiException):
     """HTTP 500 Server Error Exception"""

@@ -3,3 +3,5 @@ __pycache__
 /env
 *.csv
 stl.ini
+notes.txt
+_*.py

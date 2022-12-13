@@ -7,7 +7,7 @@ from random import randint
 from time import sleep
 from urllib.parse import urlunparse, urlencode
 
-from stl.exception.api import ApiException, ForbiddenException
+from stl.exception.api import ApiException, ForbiddenException, NotFoundException
 
 
 class BaseEndpoint(ABC):
@@ -42,6 +42,8 @@ class BaseEndpoint(ABC):
             errors = response_json.get('errors')
             if not errors:
                 return response_json
+            elif errors[0]['extensions']['response']['statusCode'] == 404:
+                return {'data': {'startStayCheckoutFlow': {'stayCheckout': {'sections': {'metadata': {'errorData': {'errorMessage': {'errorTitle': '404'}}}}}}}}
 
             self.__handle_api_error(errors)
 
@@ -60,6 +62,8 @@ class BaseEndpoint(ABC):
                 status_code = error['extensions']['response'].get('statusCode')
                 if status_code == 403:
                     raise ForbiddenException([error])
+                if status_code == 404:
+                    raise NotFoundException([error])
                 if status_code >= 500:
                     sleep(60)  # sleep for a minute and then make another attempt
                     self._logger.warning(error)

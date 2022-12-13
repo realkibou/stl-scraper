@@ -21,9 +21,9 @@ class Pricing(BaseEndpoint):
         product_id = Pdp.get_product_id(listing_id)
         rates = self.get_rates(product_id, checkin, checkout)
         sections = rates['data']['startStayCheckoutFlow']['stayCheckout']['sections']
-        if not (sections['temporaryQuickPayData'] and sections['temporaryQuickPayData']['bootstrapPaymentsJSON']):
-            raise ValueError('Error retrieving pricing: {}'.format(sections['metadata']['errorData']['errorMessage']))
-
+        if sections.get('temporaryQuickPayData') is None or sections.get('temporaryQuickPayData').get('bootstrapPaymentsJSON') is None:
+            raise ValueError(sections['metadata']['errorData']['errorMessage'])
+            
         quickpay_data = json.loads(sections['temporaryQuickPayData']['bootstrapPaymentsJSON'])
         return self.__normalize_pricing(
             quickpay_data['productPriceBreakdown']['priceBreakdown'],
@@ -103,7 +103,7 @@ class Pricing(BaseEndpoint):
         airbnb_fee = items['AIRBNB_GUEST_FEE']['total']['amountMicros'] / mega if items.get('AIRBNB_GUEST_FEE') else 0
         pricing = {
             'nights':              nights,
-            'price_nightly':       price_accommodation / nights,
+            'price_nightly':       (cleaning_fee + airbnb_fee + price_accommodation) / nights,
             'price_accommodation': price_accommodation,
             'price_cleaning':      cleaning_fee,
             'taxes':               taxes,
