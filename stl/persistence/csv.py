@@ -3,7 +3,6 @@ import pandas as pd
 
 from stl.persistence import PersistenceInterface
 
-
 class Csv(PersistenceInterface):
 
     def __init__(self, csv_path: str):

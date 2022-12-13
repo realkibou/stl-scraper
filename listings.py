@@ -119,7 +119,7 @@ def getOccupations(filename):
         OccupationDates = dict()
 
     df = pandas.DataFrame.from_dict(Occupation, orient="index")
-    df.to_csv(today.strftime("%Y-%m-%d-") + filename + '_occupation.csv', encoding='utf-8', index=False)
+    df.to_csv('./data/' + today.strftime("%Y-%m-%d-") + filename + '_occupation.csv', encoding='utf-8', index=False)
 
     return Occupation
 
